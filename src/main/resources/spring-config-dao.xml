@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/tx
+            http://www.springframework.org/schema/tx/spring-tx.xsd
+            http://www.springframework.org/schema/aop
+            http://www.springframework.org/schema/aop/spring-aop.xsd"
+       >
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 注入dataSource -->
+        <property name="dataSource" ref="dataSourceDbcp"></property>
+        <!-- 注入mybatis的全局配置文件路径 (该部分可以被省略掉) -->
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+        <!-- mybatis批量别名配置 -->
+        <property name="typeAliasesPackage" value="com.my.domain.po"></property>
+        <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+    </bean>
+    <!-- 相当于配置之前的AccountDao持久层bean -->
+    <!-- 配置Mapper代理对象方式一：MapperFactoryBean -->
+    <!-- 通过MapperFactoryBean生成的代理对象，一次只能针对一个接口进行生成 -->
+    <!-- 注意事项：mapper接口类和mapper映射文件同包同名 -->
+    <!-- <bean id="accountMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        注入SqlSessionFactory <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+        注入目标接口类 <property name="mapperInterface" value="com.kkb.ms.mapper.AccountMapper"></property>
+        </bean> -->
+    <!-- 配置Mapper代理对象方式二：MapperScannerConfigurer -->
+    <!-- 批量代理对象的生成 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 指定需要生成代理的接口所在的包名 -->
+        <property name="basePackage" value="com.my.dao"></property>
+
+        <!-- 注意事项：不要配置SqlSessionFactory -->
+        <!--<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>-->
+        <!--<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>-->
+    </bean>
+
+
+    <!--事务-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSourceDbcp"/>
+    </bean>
+    <!--注解事务-->
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+
+    <!--通知 事务 要是注解的话需要开启标签 -->
+    <!--tx:advice 对应的处理类就是TransactionInterceptor类-->
+    <!--TransactionInterceptor类是实现事务通过transcation-manager属性指定的值惊醒事务管理-->
+    <!--<tx:advice id="txAdvice" transaction-manager="transactionManager">-->
+        <!--<tx:attributes>-->
+            <!--<tx:method name="insert*" propagation="REQUIRED"/>-->
+        <!--</tx:attributes>-->
+    <!--</tx:advice>-->
+    <!--&lt;!&ndash;基于 AsprctJ+xml方式实现声明式事务&ndash;&gt;-->
+    <!--<aop:config>-->
+        <!--&lt;!&ndash;spring已经实现了该功能  实现MethodInterceptor接口的方式实现的&ndash;&gt;-->
+        <!--<aop:advisor advice-ref="txAdvice" pointcut="execution(* *..* .Demo2.*(..))"/>-->
+    <!--</aop:config>-->
+</beans>
