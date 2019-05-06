@@ -27,7 +27,7 @@
 
 
     <!-- 自动扫描装配 -->
-    <context:component-scan base-package="com.my"/>
+    <context:component-scan base-package="com.my.controller"/>
     <mvc:interceptors>
         <!-- 公共拦截器可以拦截所有请求，而且可以有多个 -->
 
