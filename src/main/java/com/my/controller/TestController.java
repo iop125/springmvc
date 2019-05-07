@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -17,6 +18,10 @@ import java.util.List;
 public class TestController {
     @Resource(name ="oclassMapper")
     private OclassMapper oclassMapper;
+
+    @Resource(name ="jedisPool")
+    private JedisPool jedisPool;
+
     @RequestMapping("index")
     public ModelAndView index() {
         List<Item> itemList = new ArrayList<>();
@@ -45,7 +50,7 @@ public class TestController {
     @ResponseBody
     public String insertClass() {
         Oclass oclass = new Oclass(null,"第七班",2L);
-        oclassMapper.insert(oclass);
-        return  "22222";
+//        oclassMapper.insert(oclass);
+        return  jedisPool.getResource().get("key2");
     }
 }

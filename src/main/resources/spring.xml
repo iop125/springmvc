@@ -28,4 +28,5 @@
     <import resource="spring-config-dao.xml"/>
     <!--<import resource="spring-config-datasource-${plugin-cente.jdbc.datasource.type}.xml"/>-->
     <import resource="spring-config-manager.xml"/>
+    <import resource="spring-config-redis.xml"/>
 </beans>

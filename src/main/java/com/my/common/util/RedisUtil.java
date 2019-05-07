@@ -11,9 +11,10 @@ public class RedisUtil {
         //从连接池中获得连接
         Jedis jedis = jedisPool.getResource();
         String s = jedis.set("key2","key1-key1","NX","EX",10L);
+        String s1 = jedis.set("key2","key1-key1");
         System.out.println("------"+s);
 
-        String result = jedis.get("key1") ;
+        String result = jedis.get("ke1") ;
         System.out.println(result);
         //关闭连接
         jedis.close();
