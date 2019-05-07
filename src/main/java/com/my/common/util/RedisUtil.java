@@ -7,7 +7,7 @@ public class RedisUtil {
 
     public void redisPool(){
         //创建一连接池对象
-        JedisPool jedisPool = new JedisPool("127.0.0.1", 6379);
+        JedisPool jedisPool = new JedisPool("192.168.3.115", 6380);
         //从连接池中获得连接
         Jedis jedis = jedisPool.getResource();
         String s = jedis.set("key2","key1-key1","NX","EX",10L);
